@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Cleverly.co - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f6f8fb 0%, #e5ebf4 100%);
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        .animate-slide-up {
+            animation: slideUp 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .input-group {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .input-group input:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .btn-login {
+            transition: all 0.3s ease;
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md animate-fade-in">
+        <div class="flex justify-center mb-8 animate-slide-up">
+            <img src="/static/logo.png" alt="Cleverly.co logo" class="h-12 w-auto"/>
+        </div>
+        <form method="POST" action="/login" class="space-y-6">
+            <div class="input-group animate-slide-up" style="animation-delay: 0.1s">
+                <label class="block text-gray-700 font-medium mb-2" for="email">Email</label>
+                <input class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                       id="email" name="email" type="email" required placeholder="Enter your email"/>
+            </div>
+            <div class="input-group animate-slide-up" style="animation-delay: 0.2s">
+                <label class="block text-gray-700 font-medium mb-2" for="password">Password</label>
+                <input class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                       id="password" name="password" type="password" required placeholder="Enter your password"/>
+            </div>
+            <div class="flex items-center justify-between mb-6 animate-slide-up" style="animation-delay: 0.3s">
+                <div class="flex items-center">
+                    <input class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded transition-all duration-300"
+                           id="remember" type="checkbox" name="remember"/>
+                    <label class="ml-2 block text-gray-700" for="remember">Remember me</label>
+                </div>
+                <a class="text-blue-600 hover:text-blue-800 transition-all duration-300" href="#">Forgot password?</a>
+            </div>
+            <button class="btn-login w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 animate-slide-up"
+                    type="submit" style="animation-delay: 0.4s">
+                Login
+            </button>
+        </form>
+        <p class="text-center text-gray-600 mt-8 animate-slide-up" style="animation-delay: 0.5s">
+            Don't have an account?
+            <a class="text-blue-600 hover:text-blue-800 font-medium transition-all duration-300" href="/signup">Sign up</a>
+        </p>
+    </div>
+</body>
+</html>

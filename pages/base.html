@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Cleverly{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Base Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .nav-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: #2563eb;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .nav-link.active {
+            color: #2563eb;
+        }
+        .nav-link.active::after {
+            width: 100%;
+        }
+        .page-transition {
+            animation: fadeInUp 0.5s ease-out;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* Chat bubble styles */
+        .chat-bubble {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            transition: all 0.3s ease;
+            transform-origin: bottom right;
+        }
+        .chat-bubble:hover {
+            transform: scale(1.05);
+        }
+        .chat-window {
+            position: fixed;
+            bottom: 5rem;
+            right: 2rem;
+            width: 300px;
+            height: 400px;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transform: translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        .chat-window.active {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+        .message {
+            animation: messageSlide 0.3s ease forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @keyframes messageSlide {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md fixed w-full z-10 top-0">
+        <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="{{ url_for('home') }}" class="flex items-center">
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="Cleverly" class="h-10 w-auto">
+            </a>
+            <div class="flex items-center space-x-8">
+                <a href="{{ url_for('home') }}" 
+                   class="nav-link text-gray-700 hover:text-blue-600 {{ 'active' if request.endpoint == 'home' }}">
+                    <i class="fas fa-home mr-2"></i>Home
+                </a>
+                <a href="{{ url_for('dashboard') }}" 
+                   class="nav-link text-gray-700 hover:text-blue-600 {{ 'active' if request.endpoint == 'dashboard' }}">
+                    <i class="fas fa-chart-line mr-2"></i>Dashboard
+                </a>
+                <a href="{{ url_for('settings') }}" 
+                   class="nav-link text-gray-700 hover:text-blue-600 {{ 'active' if request.endpoint == 'settings' }}">
+                    <i class="fas fa-cog mr-2"></i>Settings
+                </a>
+                <a href="{{ url_for('profile') }}" 
+                   class="nav-link text-gray-700 hover:text-blue-600 {{ 'active' if request.endpoint == 'profile' }}">
+                    <i class="fas fa-user mr-2"></i>Profile
+                </a>
+                <a href="{{ url_for('logout') }}" 
+                   class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="pt-16 min-h-screen page-transition">
+        {% block content %}{% endblock %}
+    </div>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html> 

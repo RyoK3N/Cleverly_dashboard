@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - Cleverly{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="p-6 sm:p-10">
+                <!-- General Settings -->
+                <div class="mb-12">
+                    <h2 class="text-2xl font-bold mb-6">General Settings</h2>
+                    <form class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2" for="language">
+                                    Language
+                                </label>
+                                <select id="language" 
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
+                                    <option>English</option>
+                                    <option>Spanish</option>
+                                    <option>French</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2" for="timezone">
+                                    Timezone
+                                </label>
+                                <select id="timezone" 
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300">
+                                    <option>UTC-12:00</option>
+                                    <option>UTC-11:00</option>
+                                    <option>UTC-10:00</option>
+                                    <option>UTC-09:00</option>
+                                    <option>UTC-08:00</option>
+                                    <option>UTC-07:00</option>
+                                    <option>UTC-06:00</option>
+                                    <option>UTC-05:00</option>
+                                    <option>UTC-04:00</option>
+                                    <option>UTC-03:00</option>
+                                    <option>UTC-02:00</option>
+                                    <option>UTC-01:00</option>
+                                    <option>UTC+00:00</option>
+                                    <option>UTC+01:00</option>
+                                    <option>UTC+02:00</option>
+                                    <option>UTC+03:00</option>
+                                    <option>UTC+04:00</option>
+                                    <option>UTC+05:00</option>
+                                    <option>UTC+06:00</option>
+                                    <option>UTC+07:00</option>
+                                    <option>UTC+08:00</option>
+                                    <option>UTC+09:00</option>
+                                    <option>UTC+10:00</option>
+                                    <option>UTC+11:00</option>
+                                    <option>UTC+12:00</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" 
+                                class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105">
+                            Save General Settings
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Notification Settings -->
+                <div class="mb-12">
+                    <h2 class="text-2xl font-bold mb-6">Notification Settings</h2>
+                    <form class="space-y-6">
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-300">
+                                <div class="flex items-center space-x-3">
+                                    <input type="checkbox" id="email-notifications" 
+                                           class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                    <div>
+                                        <label class="font-medium text-gray-900" for="email-notifications">
+                                            Email Notifications
+                                        </label>
+                                        <p class="text-sm text-gray-500">Receive updates via email</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-300">
+                                <div class="flex items-center space-x-3">
+                                    <input type="checkbox" id="sms-notifications" 
+                                           class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                    <div>
+                                        <label class="font-medium text-gray-900" for="sms-notifications">
+                                            SMS Notifications
+                                        </label>
+                                        <p class="text-sm text-gray-500">Get notified via SMS</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-300">
+                                <div class="flex items-center space-x-3">
+                                    <input type="checkbox" id="push-notifications" 
+                                           class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                    <div>
+                                        <label class="font-medium text-gray-900" for="push-notifications">
+                                            Push Notifications
+                                        </label>
+                                        <p class="text-sm text-gray-500">Receive push notifications</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" 
+                                class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105">
+                            Save Notification Settings
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Data Preferences -->
+                <div>
+                    <h2 class="text-2xl font-bold mb-6">Data Preferences</h2>
+                    <form class="space-y-6">
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-300">
+                                <div class="flex items-center space-x-3">
+                                    <input type="checkbox" id="data-sharing" 
+                                           class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                    <div>
+                                        <label class="font-medium text-gray-900" for="data-sharing">
+                                            Data Sharing
+                                        </label>
+                                        <p class="text-sm text-gray-500">Allow data sharing for better insights</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-300">
+                                <div class="flex items-center space-x-3">
+                                    <input type="checkbox" id="analytics" 
+                                           class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                                    <div>
+                                        <label class="font-medium text-gray-900" for="analytics">
+                                            Analytics
+                                        </label>
+                                        <p class="text-sm text-gray-500">Enable analytics tracking</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" 
+                                class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105">
+                            Save Data Preferences
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

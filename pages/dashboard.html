@@ -1,0 +1,338 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Cleverly{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+{% endblock %}
+
+{% block extra_styles %}
+.chat-bubble {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    transition: all 0.3s ease;
+    transform-origin: bottom right;
+}
+.chat-bubble:hover {
+    transform: scale(1.05);
+}
+.chat-window {
+    position: fixed;
+    bottom: 5rem;
+    right: 2rem;
+    width: 300px;
+    height: 400px;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    transform: translateY(20px);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+.chat-window.active {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: all;
+}
+.message {
+    animation: messageSlide 0.3s ease forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+@keyframes messageSlide {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+.loading-text {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem;
+    color: #2563eb;
+    text-align: center;
+}
+.loading-progress {
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    text-align: center;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div id="loadingText" class="loading-text"></div>
+        <div id="loadingProgress" class="loading-progress"></div>
+    </div>
+
+    <!-- Header with Refresh Button -->
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-2xl font-bold">Sales Performance Dashboard</h1>
+        <button id="fetchDataButton" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-all duration-300 flex items-center gap-2">
+            <i class="fas fa-sync-alt"></i>
+            <span>Fetch Data</span>
+        </button>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="mb-4 p-4 rounded-lg {% if category == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Filters Section -->
+    <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+        <h2 class="text-xl font-semibold mb-4">Filter Options</h2>
+        <form id="filterForm" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Start Date</label>
+                <input type="date" name="start_date" value="{{ start_date }}" 
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">End Date</label>
+                <input type="date" name="end_date" value="{{ end_date }}"
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Date Column</label>
+                <select name="date_column" 
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <option value="Date Created" {% if date_column == 'Date Created' %}selected{% endif %}>Date Created</option>
+                    <option value="Sales Call Date" {% if date_column == 'Sales Call Date' %}selected{% endif %}>Sales Call Date</option>
+                </select>
+            </div>
+            <div class="md:col-span-3">
+                <button type="submit" class="w-full bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200">
+                    Apply Filters
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div id="dashboardContent">
+        <!-- Content will be loaded here -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <p class="text-gray-700 text-center">No data available. Please click the "Fetch Data" button to load the dashboard.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Chat Bubble -->
+<div class="fixed bottom-6 right-6">
+    <button id="chatButton" class="bg-blue-600 text-white w-14 h-14 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 flex items-center justify-center">
+        <i class="fas fa-comments text-xl"></i>
+    </button>
+</div>
+
+<!-- Chat Window -->
+<div id="chatWindow" class="fixed bottom-24 right-6 w-96 bg-white rounded-xl shadow-2xl hidden">
+    <div class="p-4 bg-blue-600 text-white rounded-t-xl flex justify-between items-center">
+        <h3 class="font-semibold">Chat Support</h3>
+        <button id="closeChatButton" class="text-white hover:text-gray-200">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div id="chatMessages" class="p-4 h-96 overflow-y-auto">
+        <!-- Messages will be added here -->
+    </div>
+    <div class="p-4 border-t">
+        <div class="flex gap-2">
+            <input type="text" id="messageInput" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Type your message...">
+            <button id="sendMessageButton" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Wait for all resources to load
+    window.addEventListener('load', function() {
+        console.log('Window loaded - Initializing dashboard...');
+        
+        // Get DOM elements
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const loadingText = document.getElementById('loadingText');
+        const loadingProgress = document.getElementById('loadingProgress');
+        const fetchDataButton = document.getElementById('fetchDataButton');
+        const filterForm = document.getElementById('filterForm');
+        const dashboardContent = document.getElementById('dashboardContent');
+
+        // Log element existence
+        console.log('DOM Elements:', {
+            loadingOverlay: !!loadingOverlay,
+            loadingText: !!loadingText,
+            loadingProgress: !!loadingProgress,
+            fetchDataButton: !!fetchDataButton,
+            filterForm: !!filterForm,
+            dashboardContent: !!dashboardContent
+        });
+
+        // Define utility functions
+        function showLoading(message = 'Fetching data from Monday.com...') {
+            console.log('Showing loading overlay with message:', message);
+            if (loadingOverlay && loadingText) {
+                loadingOverlay.style.display = 'flex';
+                loadingText.textContent = message;
+            }
+        }
+
+        function hideLoading() {
+            console.log('Hiding loading overlay');
+            if (loadingOverlay && loadingText && loadingProgress) {
+                loadingOverlay.style.display = 'none';
+                loadingText.textContent = '';
+                loadingProgress.textContent = '';
+            }
+        }
+
+        function updateProgress(message) {
+            console.log('Updating progress:', message);
+            if (loadingProgress) {
+                loadingProgress.textContent = message;
+            }
+        }
+
+        // Hide loading overlay initially
+        hideLoading();
+
+        // Fetch data function
+        async function fetchDashboardData(params = {}) {
+            console.log('Starting fetchDashboardData with params:', params);
+            showLoading();
+            updateProgress('Initializing data fetch...');
+            
+            try {
+                // Build URL with parameters
+                const url = new URL('/api/dashboard-data', window.location.origin);
+                Object.keys(params).forEach(key => {
+                    if (params[key]) url.searchParams.append(key, params[key]);
+                });
+
+                console.log('Fetching data from:', url.toString());
+                updateProgress('Sending request to server...');
+                
+                const response = await fetch(url);
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                updateProgress('Processing server response...');
+                const data = await response.json();
+                console.log('Received data:', data);
+
+                if (data.success) {
+                    updateProgress('Updating dashboard with new data...');
+                    updateDashboard(data.data);
+                    updateProgress('Dashboard updated successfully!');
+                } else {
+                    console.error('Error in response:', data.error);
+                    if (dashboardContent) {
+                        dashboardContent.innerHTML = `
+                            <div class="bg-red-100 p-6 rounded-lg shadow-md">
+                                <p class="text-red-700 text-center">${data.error}: ${data.details}</p>
+                            </div>
+                        `;
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                if (dashboardContent) {
+                    dashboardContent.innerHTML = `
+                        <div class="bg-red-100 p-6 rounded-lg shadow-md">
+                            <p class="text-red-700 text-center">Error: ${error.message}</p>
+                        </div>
+                    `;
+                }
+            } finally {
+                setTimeout(hideLoading, 1000);
+            }
+        }
+
+        // Add click event listener to fetch button
+        if (fetchDataButton) {
+            console.log('Adding click event listener to fetch button');
+            fetchDataButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Fetch button clicked');
+                const formData = new FormData(filterForm);
+                const params = {
+                    force_refresh: 'true',
+                    start_date: formData.get('start_date'),
+                    end_date: formData.get('end_date'),
+                    date_column: formData.get('date_column')
+                };
+                console.log('Fetching with params:', params);
+                fetchDashboardData(params);
+            });
+        } else {
+            console.error('Fetch button not found in DOM');
+        }
+
+        // Add submit event listener to filter form
+        if (filterForm) {
+            console.log('Adding submit event listener to filter form');
+            filterForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                console.log('Filter form submitted');
+                const formData = new FormData(filterForm);
+                const params = {
+                    start_date: formData.get('start_date'),
+                    end_date: formData.get('end_date'),
+                    date_column: formData.get('date_column')
+                };
+                console.log('Fetching with params:', params);
+                fetchDashboardData(params);
+            });
+        } else {
+            console.error('Filter form not found in DOM');
+        }
+
+        // Rest of your existing updateDashboard function and other code...
+    });
+</script>
+{% endblock %}

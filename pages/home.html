@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Cleverly Sales Dashboard{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-gradient-to-br from-blue-50 to-indigo-50 py-20">
+    <div class="container mx-auto px-6 text-center">
+        <h1 class="text-5xl font-bold mb-4 text-gray-900">Welcome to Sales Dashboard</h1>
+        <p class="text-xl text-gray-700 mb-8 max-w-3xl mx-auto">
+            This platform fetches all the data from Monday.com and projects various metrics to monitor the performance of employees based on the data that is fed to Monday.com by the employees. This provides a method to see the progress of the employees and make informed decisions.
+        </p>
+        <a href="{{ url_for('dashboard') }}" class="inline-flex items-center bg-blue-600 text-white py-3 px-8 rounded-full text-lg hover:bg-blue-700 transition-colors duration-300 transform hover:scale-105">
+            <span>Get Started</span>
+            <i class="fas fa-arrow-right ml-2"></i>
+        </a>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-20">
+    <div class="container mx-auto px-6">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold text-gray-900">Key Features</h2>
+            <p class="text-xl text-gray-700 mt-4">
+                Explore the core functionalities that make Cleverly indispensable for our team.
+            </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+            <!-- Feature 1 -->
+            <div class="bg-white p-8 rounded-xl shadow-lg transform transition-all duration-300 hover:-translate-y-2">
+                <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                    <i class="fas fa-sync-alt text-2xl text-blue-600"></i>
+                </div>
+                <h3 class="text-2xl font-semibold mb-4 text-gray-900">Automatic Data Fetching</h3>
+                <p class="text-gray-700">
+                    Seamlessly integrated with Monday.com to automatically fetch and synchronize your sales data in real-time.
+                </p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="bg-white p-8 rounded-xl shadow-lg transform transition-all duration-300 hover:-translate-y-2">
+                <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                    <i class="fas fa-chart-line text-2xl text-blue-600"></i>
+                </div>
+                <h3 class="text-2xl font-semibold mb-4 text-gray-900">Data Processing</h3>
+                <p class="text-gray-700">
+                    Advanced algorithms process your sales data to generate meaningful insights and monitor performance metrics.
+                </p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="bg-white p-8 rounded-xl shadow-lg transform transition-all duration-300 hover:-translate-y-2">
+                <div class="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                    <i class="fas fa-chart-pie text-2xl text-blue-600"></i>
+                </div>
+                <h3 class="text-2xl font-semibold mb-4 text-gray-900">Visual Insights</h3>
+                <p class="text-gray-700">
+                    Beautiful and intuitive visualizations help you understand your data and make informed decisions quickly.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="bg-blue-600 py-20">
+    <div class="container mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+            <div class="bg-white/10 p-6 rounded-lg backdrop-blur-lg">
+                <h4 class="text-4xl font-bold text-white mb-2">500+</h4>
+                <p class="text-blue-100">Active Users</p>
+            </div>
+            <div class="bg-white/10 p-6 rounded-lg backdrop-blur-lg">
+                <h4 class="text-4xl font-bold text-white mb-2">1M+</h4>
+                <p class="text-blue-100">Data Points</p>
+            </div>
+            <div class="bg-white/10 p-6 rounded-lg backdrop-blur-lg">
+                <h4 class="text-4xl font-bold text-white mb-2">24/7</h4>
+                <p class="text-blue-100">Support</p>
+            </div>
+            <div class="bg-white/10 p-6 rounded-lg backdrop-blur-lg">
+                <h4 class="text-4xl font-bold text-white mb-2">99.9%</h4>
+                <p class="text-blue-100">Uptime</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20">
+    <div class="container mx-auto px-6 text-center">
+        <h2 class="text-4xl font-bold mb-8">Ready to Get Started?</h2>
+        <a href="{{ url_for('dashboard') }}" class="inline-flex items-center bg-blue-600 text-white py-4 px-8 rounded-full text-xl hover:bg-blue-700 transition-all duration-300 transform hover:scale-105">
+            Go to Dashboard
+            <i class="fas fa-arrow-right ml-2"></i>
+        </a>
+    </div>
+</section>
+{% endblock %}
